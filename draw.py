@@ -3,7 +3,25 @@ from matrix import *
 from math import *
 from gmath import *
 
+'''
+* Call in draw_polygons
+* Color changes for each triangle
+'''
 def scanline_convert(polygons, i, screen, zbuffer ):
+    #order of angle BMT
+    point = 0:
+    while point < len(polygons)-2:
+        #point in the top left is TOP
+        y_max = max (polygons[point][1],polygons[point+1][1],polygons[point+2][1])
+        #point in the bottom left is BOT
+        y_min = min (polygons[point][1],polygons[point][1],polygons[point][1])
+        
+        #point that is neither is MID
+    #max/min 
+
+    #zbuffering
+    z_buffer = new_zbuffer()
+    
     pass
 
 def add_polygon( polygons, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
