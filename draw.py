@@ -9,18 +9,61 @@ from gmath import *
 '''
 def scanline_convert(polygons, i, screen, zbuffer ):
     #order of angle BMT
-    point = 0:
+    point = 0
     while point < len(polygons)-2:
+        point_0 = polygons[point]
+        point_1 = polygons[point+1]
+        point_3 = polygons[point+2]
+        triangle = [ point_1, point_2, point_3]
+        top = []
+        mid = []
+        bot = []
+        a_max = False
+        a_min = False
+        x = 0
         #point in the top left is TOP
-        y_max = max (polygons[point][1],polygons[point+1][1],polygons[point+2][1])
         #point in the bottom left is BOT
-        y_min = min (polygons[point][1],polygons[point][1],polygons[point][1])
+        y_max = max (point_0[1],point_1[1],point_2[1])
+        y_min = min (point_0[1],point_1[1],point_2[1])
+        i = 0
+        while i < len(triangle):
+            if(y_max == triangle[i][1]):
+                if(a_max):
+                    mid = top
+                    top = triangle[i]
+                else:
+                    if (triangle[i][0]< x):
+                        top = triangle[i]
+                        x = triangle[i][0]
+            elif(triangle[i][1] < y_max and triangle[i][1]  < y_min):
+                mid = triangle[i]
+            elif(y_min == triangle[i][1]):
+                if(a_min):
+                    mid = bot
+                    bot = triangle[i]
+                else:
+                    if (triangle[i][0] < x):
+                        bot = triangle[i]
+                        x = triangle[i][0]
         
-        #point that is neither is MID
-    #max/min 
+        #drawing_lines
+        z_buffer = new_zbuffer()
+        y = bot[1]
+        while y <= top[1]:
+            y+=1
+            bt_x = bot[0]
+            bt_x += (top[0] - bot[0])/(top[1]-bot[1])
 
-    #zbuffering
-    z_buffer = new_zbuffer()
+            bmt_x = bot[0]
+            if (y == mid[1] and y > mid[1]):
+                if(top[1]-mid[1] != 0):
+                    bmt_x += (top[0] - mid[0]) / (top[1] - mid[1])
+                    
+            else:
+                if(mid[1]-bot[1] != 0):
+                    bmt_x += (mid[0] - bot[0]) / (mid[1] - bot[1])
+        
+            draw_line(bt_x, y, 0, bmt_x, y, 0, zbuffer, color)
     
     pass
 
