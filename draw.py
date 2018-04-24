@@ -18,20 +18,29 @@ def scanline_convert(polygons, i, screen, zbuffer ):
     #bot = []
     if (bot[1] > top[1]):
         temp_m = top
-        bot = top
-        top = temp_m
+        top = bot
+        bot = temp_m
     if (bot[1]> mid[1]):
         temp_m = mid
-        bot = mid
-        mid = temp_m
+        mid = bot
+        bot = temp_m
     if (mid[1]> top[1]):
         temp_m = top
-        mid = top
-        top = temp_m
+        top = mid
+        mid = temp_m
+    if (mid[1] == top[1] and mid[0] < top[0]):
+        temp_m = top
+        top = mid
+        mid = temp_m
+    if (mid[1] == bot[1] and mid[0] < bot[0]):
+        temp_m = mid
+        mid = bot
+        bot = temp_m
     #x = 0
     #point in the top left is TOP
     #point in the bottom left is BOT
     '''
+
     y_max = max (point_0[1],point_1[1],point_2[1])
     y_min = min (point_0[1],point_1[1],point_2[1])
     a = 0
@@ -55,9 +64,7 @@ def scanline_convert(polygons, i, screen, zbuffer ):
                         bot = triangle[a]
                         x = triangle[a][0]
        ''' 
-    #color = [random.randint(1,256),random.randint(1,256),random.randint(1,256)]
-    color = [255,255,255]
-
+    color = [random.randint(1,256),random.randint(1,256),random.randint(1,256)]
     y = bot[1]
     x0 = bot[0]
     x1 = bot[0]
