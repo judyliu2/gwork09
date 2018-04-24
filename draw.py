@@ -12,10 +12,7 @@ def scanline_convert(polygons, i, screen, zbuffer ):
     bot = polygons[i]
     mid = polygons[i+1]
     top = polygons[i+2]
-    #triangle = [ point_0, point_1, point_2]
-    #top = []
-    #mid = []
-    #bot = []
+
     if (bot[1] > top[1]):
         temp_m = top
         top = bot
@@ -72,23 +69,23 @@ def scanline_convert(polygons, i, screen, zbuffer ):
     z1 = bot[2]
     while y <= mid[1]:
         y+=1
-        if(top[1]-mid[1] != 0 ):
-            draw_line(int(x0),int(y),z0,int(x1),int(y),z1, screen, zbuffer, color)
-            x0 += (top[0] - bot[0]) / (top[1] - bot[1])
-            x1 += (top[0] - mid[0]) / (top[1] - mid[1])
-            z0 += (top[2] - bot[2]) / (top[1] - bot[1])
-            z1 += (top[2] - mid[2]) / (top[1] - mid[1])
-
-    x1 = mid[0]
-    z1 = mid[2]
-    while y<= top[1]:
-        y+=1
-        if(mid[1]-bot[1] != 0):
+        if(mid[1] !=bot[1] ):
             draw_line(int(x0),int(y),z0,int(x1),int(y),z1, screen, zbuffer, color)
             x0 += (top[0] - bot[0]) / (top[1] - bot[1])
             x1 += (mid[0] - bot[0]) / (mid[1] - bot[1])
             z0 += (top[2] - bot[2]) / (top[1] - bot[1])
             z1 += (mid[2] - bot[2]) / (mid[1] - bot[1])
+
+    x1 = mid[0]
+    z1 = mid[2]
+    while y<= top[1]:
+        y+=1
+        if(mid[1] != top[1]):
+            draw_line(int(x0),int(y),z0,int(x1),int(y),z1, screen, zbuffer, color)
+            x0 += (top[0] - bot[0]) / (top[1] - bot[1])
+            x1 += (top[0] - mid[0]) / (top[1] - mid[1])
+            z0 += (top[2] - bot[2]) / (top[1] - bot[1])
+            z1 += (top[2] - mid[2]) / (top[1] - mid[1])
         
 
 
