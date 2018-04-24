@@ -2,28 +2,40 @@ from display import *
 from matrix import *
 from math import *
 from gmath import *
+import random
 
 '''
 * Call in draw_polygons
 * Color changes for each triangle
 '''
 def scanline_convert(polygons, i, screen, zbuffer ):
-    point_0 = polygons[i][0]
-    point_1 = polygons[i][1]
-    point_2 = polygons[i][2]
-    triangle = [ point_0, point_1, point_2]
-    top = []
-    mid = []
-    bot = []
-    a_max = False
-    a_min = False
-    x = 0
+    bot = polygons[i]
+    mid = polygons[i+1]
+    top = polygons[i+2]
+    #triangle = [ point_0, point_1, point_2]
+    #top = []
+    #mid = []
+    #bot = []
+    if (bot[1] > top[1]):
+        temp_m = top
+        bot = top
+        top = temp_m
+    if (bot[1]> mid[1]):
+        temp_m = mid
+        bot = mid
+        mid = temp_m
+    if (mid[1]> top[1]):
+        temp_m = top
+        mid = top
+        top = temp_m
+    #x = 0
     #point in the top left is TOP
     #point in the bottom left is BOT
+    '''
     y_max = max (point_0[1],point_1[1],point_2[1])
     y_min = min (point_0[1],point_1[1],point_2[1])
     a = 0
-    while a < len(triangle):
+    while a < 3:
         if(y_max == triangle[a][1]):
             if(a_max):
                 mid = top
@@ -42,30 +54,36 @@ def scanline_convert(polygons, i, screen, zbuffer ):
                     if (triangle[a][0] < x):
                         bot = triangle[a]
                         x = triangle[a][0]
-        
-        #drawing_lines
-        #MODIFY ZBUFFER
-    z_buffer = new_zbuffer()
+       ''' 
+    #color = [random.randint(1,256),random.randint(1,256),random.randint(1,256)]
+    color = [255,255,255]
+
     y = bot[1]
-    bt_x = 0
-    bmt_x = 0
-    while y <= top[1]:
-            y+=1
-            bt_x = bot[0]
-            bt_x += (top[0] - bot[0])/(top[1]-bot[1])
+    x0 = bot[0]
+    x1 = bot[0]
+    z0 = bot[2]
+    z1 = bot[2]
+    while y <= mid[1]:
+        y+=1
+        if(top[1]-mid[1] != 0 ):
+            draw_line(int(x0),int(y),z0,int(x1),int(y),z1, screen, zbuffer, color)
+            x0 += (top[0] - bot[0]) / (top[1] - bot[1])
+            x1 += (top[0] - mid[0]) / (top[1] - mid[1])
+            z0 += (top[2] - bot[2]) / (top[1] - bot[1])
+            z1 += (top[2] - mid[2]) / (top[1] - mid[1])
+
+    x1 = mid[0]
+    z1 = mid[2]
+    while y<= top[1]:
+        y+=1
+        if(mid[1]-bot[1] != 0):
+            draw_line(int(x0),int(y),z0,int(x1),int(y),z1, screen, zbuffer, color)
+            x0 += (top[0] - bot[0]) / (top[1] - bot[1])
+            x1 += (mid[0] - bot[0]) / (mid[1] - bot[1])
+            z0 += (top[2] - bot[2]) / (top[1] - bot[1])
+            z1 += (mid[2] - bot[2]) / (mid[1] - bot[1])
         
-            bmt_x = bot[0]
-            if (y == mid[1] and y > mid[1]):
-                if(top[1]-mid[1] != 0):
-                    bmt_x += (top[0] - mid[0]) / (top[1] - mid[1])
-                    
-            else:
-                if(mid[1]-bot[1] != 0):
-                    bmt_x += (mid[0] - bot[0]) / (mid[1] - bot[1])
-        
-     draw_line(bt_x, y, 0, bmt_x, y, 0, zbuffer, color)
-    
-    #pass
+
 
 def add_polygon( polygons, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
     add_point(polygons, x0, y0, z0);
@@ -83,7 +101,8 @@ def draw_polygons( matrix, screen, zbuffer, color ):
         normal = calculate_normal(matrix, point)[:]
 
         if normal[2] > 0:
-
+            #print matrix[point]
+            
             draw_line( int(matrix[point][0]),
                        int(matrix[point][1]),
                        matrix[point][2],
@@ -105,6 +124,7 @@ def draw_polygons( matrix, screen, zbuffer, color ):
                        int(matrix[point+2][1]),
                        matrix[point+2][2],
                        screen, zbuffer, color)
+            scanline_convert(matrix,point,screen,zbuffer)
         point+= 3
 
 
