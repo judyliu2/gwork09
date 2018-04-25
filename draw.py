@@ -21,6 +21,10 @@ def scanline_convert(polygons, i, screen, zbuffer ):
         temp_m = mid
         mid = bot
         bot = temp_m
+    if (mid[1] == bot[1] and mid[0] < bot[0]):
+        temp_m = mid
+        mid = bot
+        bot = temp_m
     if (mid[1]> top[1]):
         temp_m = top
         top = mid
@@ -29,10 +33,7 @@ def scanline_convert(polygons, i, screen, zbuffer ):
         temp_m = top
         top = mid
         mid = temp_m
-    if (mid[1] == bot[1] and mid[0] < bot[0]):
-        temp_m = mid
-        mid = bot
-        bot = temp_m
+
     #x = 0
     #point in the top left is TOP
     #point in the bottom left is BOT
@@ -67,7 +68,7 @@ def scanline_convert(polygons, i, screen, zbuffer ):
     x1 = bot[0]
     z0 = bot[2]
     z1 = bot[2]
-    while y <= mid[1]:
+    while y < mid[1]:
         y+=1
         if(mid[1] !=bot[1] ):
             draw_line(int(x0),int(y),z0,int(x1),int(y),z1, screen, zbuffer, color)
@@ -78,7 +79,7 @@ def scanline_convert(polygons, i, screen, zbuffer ):
 
     x1 = mid[0]
     z1 = mid[2]
-    while y<= top[1]:
+    while y< top[1]:
         y+=1
         if(mid[1] != top[1]):
             draw_line(int(x0),int(y),z0,int(x1),int(y),z1, screen, zbuffer, color)
@@ -106,7 +107,7 @@ def draw_polygons( matrix, screen, zbuffer, color ):
 
         if normal[2] > 0:
             #print matrix[point]
-            
+            '''
             draw_line( int(matrix[point][0]),
                        int(matrix[point][1]),
                        matrix[point][2],
@@ -128,6 +129,7 @@ def draw_polygons( matrix, screen, zbuffer, color ):
                        int(matrix[point+2][1]),
                        matrix[point+2][2],
                        screen, zbuffer, color)
+'''
             scanline_convert(matrix,point,screen,zbuffer)
         point+= 3
 
