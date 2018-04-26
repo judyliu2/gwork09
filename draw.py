@@ -342,6 +342,9 @@ def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
         y0 = y1
         x1 = xt
         y1 = yt
+        zt = z0
+        z0 = z1
+        z1 = zt
 
     x = x0
     y = y0
@@ -384,9 +387,13 @@ def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
             d_east = -1 * B
             loop_start = y1
             loop_end = y
-
+            
+    start = loop_start
+    z_start = z0
+    
     while ( loop_start < loop_end ):
-        plot( screen, zbuffer, color, x, y, z0 )
+        plot( screen, zbuffer, color, x, y, z_start )
+        z_start +=(z1-z0)/ (loop_end - start)
         if ( (wide and ((A > 0 and d > 0) or (A < 0 and d < 0))) or
              (tall and ((A > 0 and d < 0) or (A < 0 and d > 0 )))):
 
@@ -397,5 +404,6 @@ def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
             x+= dx_east
             y+= dy_east
             d+= d_east
+            
         loop_start+= 1
     plot( screen, zbuffer, color, x, y, z1 )
